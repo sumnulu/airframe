@@ -123,7 +123,8 @@ lazy val jvmProjects: Seq[ProjectReference] = List(
   metricsJVM,
   codec,
   tablet,
-  jdbc
+  jdbc,
+  msgpackJVM
 )
 lazy val jsProjects: Seq[ProjectReference] = List(
   airframeJS,
@@ -351,6 +352,21 @@ lazy val airframeSpec =
 lazy val airframeSpecJVM = airframeSpec.jvm
 lazy val airframeSpecJS  = airframeSpec.js
 
+lazy val msgpack =
+  crossProject(JVMPlatform, JSPlatform)
+    .in(file("airframe-msgpack"))
+    .settings(buildSettings)
+    .settings(
+      name := "airframe-msgpack",
+      description := "Pure-Scala MessagePack library",
+      libraryDependencies ++= parallelCollection(scalaVersion.value)
+    )
+    .jsSettings(jsBuildSettings)
+    .dependsOn(log, airframeSpec % "test")
+
+lazy val msgpackJVM = msgpack.jvm
+lazy val msgpackJS = msgpack.js
+
 lazy val codec =
   project
     .in(file("airframe-codec"))
@@ -363,7 +379,7 @@ lazy val codec =
         "org.scalacheck" %% "scalacheck"  % "1.13.5" % "test"
       )
     )
-    .dependsOn(logJVM, surfaceJVM, airframeSpecJVM % "test")
+    .dependsOn(logJVM, surfaceJVM, msgpackJVM, airframeSpecJVM % "test")
 
 lazy val tablet =
   project
@@ -375,7 +391,7 @@ lazy val tablet =
       libraryDependencies ++= Seq(
         // scala-csv doesn't support Scala 2.13 yet
         // "com.github.tototoshi" %% "scala-csv"   % "1.3.5",
-        "org.msgpack"    % "msgpack-core" % "0.8.14",
+        "org.msgpack" % "msgpack-core" % "0.8.14",
         // For ColumnType parser and JSON parser
         "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6",
         "org.scalacheck"         %% "scalacheck"               % "1.13.5" % "test",
