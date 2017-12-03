@@ -359,7 +359,7 @@ lazy val codec =
       name := "airframe-codec",
       description := "Airframe MessagePack-based codec",
       libraryDependencies ++= Seq(
-        "org.msgpack"    % "msgpack-core" % "0.8.14",
+        "org.msgpack"    % "msgpack-core" % "0.8.14" % "test",
         "org.scalacheck" %% "scalacheck"  % "1.13.5" % "test"
       )
     )
@@ -375,6 +375,7 @@ lazy val tablet =
       libraryDependencies ++= Seq(
         // scala-csv doesn't support Scala 2.13 yet
         // "com.github.tototoshi" %% "scala-csv"   % "1.3.5",
+        "org.msgpack"    % "msgpack-core" % "0.8.14",
         // For ColumnType parser and JSON parser
         "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6",
         "org.scalacheck"         %% "scalacheck"               % "1.13.5" % "test",
